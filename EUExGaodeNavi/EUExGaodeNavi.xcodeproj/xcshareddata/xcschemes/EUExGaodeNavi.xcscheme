@@ -20,6 +20,20 @@
                ReferencedContainer = "container:EUExGaodeNavi.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2A38F459DE791D494EA25846"
+               BuildableName = "uexGaodeNavi.bundle"
+               BlueprintName = "uexGaodeNaviBundle"
+               ReferencedContainer = "container:EUExGaodeNavi.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -29,6 +43,15 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "424AD04C1C25285300EEC1F8"
+            BuildableName = "libuexGaodeNavi.a"
+            BlueprintName = "EUExGaodeNavi"
+            ReferencedContainer = "container:EUExGaodeNavi.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>

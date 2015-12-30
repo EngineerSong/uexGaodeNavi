@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <uexplugins>
     <plugin name="uexGaodeNavi">
-    	<!--
-    	<method name="aMethod"></method>
-     	-->
+    	<method name="init"></method>
+    	<method name="calculateWalkRoute"></method>
+    	<method name="calculateDriveRoute"></method>
+    	<method name="startNavi"></method>
+    	<method name="stopNavi"></method>
     </plugin>
 </uexplugins>

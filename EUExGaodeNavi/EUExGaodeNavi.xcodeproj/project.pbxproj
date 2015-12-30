@@ -8,15 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		4282681E1C27E7AD00A10A68 /* EUExGaodeNavi.m in Sources */ = {isa = PBXBuildFile; fileRef = 4282681D1C27E7AD00A10A68 /* EUExGaodeNavi.m */; };
+		42D6539C1C3251BC000231E4 /* AMapNaviKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42D6539B1C3251BC000231E4 /* AMapNaviKit.framework */; };
+		42D6539F1C3251FB000231E4 /* AMap.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42D6539D1C3251EF000231E4 /* AMap.bundle */; };
+		42D653A01C3251FB000231E4 /* AMapNavi.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42D6539E1C3251EF000231E4 /* AMapNavi.bundle */; };
+		42D653A11C3251FB000231E4 /* AMapNaviKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42D6539B1C3251BC000231E4 /* AMapNaviKit.framework */; };
+		42D653A41C32586B000231E4 /* uexGaodeNaviManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D653A31C32586B000231E4 /* uexGaodeNaviManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		424AD04B1C25285300EEC1F8 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
+			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				42D6539F1C3251FB000231E4 /* AMap.bundle in CopyFiles */,
+				42D653A01C3251FB000231E4 /* AMapNavi.bundle in CopyFiles */,
+				42D653A11C3251FB000231E4 /* AMapNaviKit.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -28,6 +36,12 @@
 		424AD04D1C25285300EEC1F8 /* libuexGaodeNavi.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libuexGaodeNavi.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4282681C1C27E7AD00A10A68 /* EUExGaodeNavi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EUExGaodeNavi.h; sourceTree = "<group>"; };
 		4282681D1C27E7AD00A10A68 /* EUExGaodeNavi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EUExGaodeNavi.m; sourceTree = "<group>"; };
+		42D6539B1C3251BC000231E4 /* AMapNaviKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AMapNaviKit.framework; sourceTree = "<group>"; };
+		42D6539D1C3251EF000231E4 /* AMap.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = AMap.bundle; path = AMapNaviKit.framework/Resources/AMap.bundle; sourceTree = "<group>"; };
+		42D6539E1C3251EF000231E4 /* AMapNavi.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = AMapNavi.bundle; path = AMapNaviKit.framework/Resources/AMapNavi.bundle; sourceTree = "<group>"; };
+		42D653A21C32586B000231E4 /* uexGaodeNaviManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uexGaodeNaviManager.h; sourceTree = "<group>"; };
+		42D653A31C32586B000231E4 /* uexGaodeNaviManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = uexGaodeNaviManager.m; sourceTree = "<group>"; };
+		42D653A51C3259A5000231E4 /* uexGaodeNavi-PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "uexGaodeNavi-PrefixHeader.pch"; sourceTree = "<group>"; };
 		46E41A61F4EC18ECD9B89677 /* MD5Digest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MD5Digest.h; sourceTree = "<group>"; };
 		4AC754A70466C22AB4736E0E /* EUExBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EUExBase.h; sourceTree = "<group>"; };
 		5A98C35758C27E9B9819385E /* EUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EUtility.h; sourceTree = "<group>"; };
@@ -46,6 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42D6539C1C3251BC000231E4 /* AMapNaviKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +102,9 @@
 		4282681F1C27FFEA00A10A68 /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				42D6539D1C3251EF000231E4 /* AMap.bundle */,
+				42D6539E1C3251EF000231E4 /* AMapNavi.bundle */,
+				42D6539B1C3251BC000231E4 /* AMapNaviKit.framework */,
 			);
 			path = libs;
 			sourceTree = "<group>";
@@ -96,6 +114,8 @@
 			children = (
 				4282681F1C27FFEA00A10A68 /* libs */,
 				3D099EC039BD0B2720FBA208 /* JSON */,
+				42D653A21C32586B000231E4 /* uexGaodeNaviManager.h */,
+				42D653A31C32586B000231E4 /* uexGaodeNaviManager.m */,
 			);
 			path = sourceCode;
 			sourceTree = "<group>";
@@ -118,6 +138,7 @@
 				437259B8C8420ADD80BA2437 /* sourceCode */,
 				4282681C1C27E7AD00A10A68 /* EUExGaodeNavi.h */,
 				4282681D1C27E7AD00A10A68 /* EUExGaodeNavi.m */,
+				42D653A51C3259A5000231E4 /* uexGaodeNavi-PrefixHeader.pch */,
 			);
 			path = EUExGaodeNavi;
 			sourceTree = "<group>";
@@ -179,6 +200,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4282681E1C27E7AD00A10A68 /* EUExGaodeNavi.m in Sources */,
+				42D653A41C32586B000231E4 /* uexGaodeNaviManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -221,7 +243,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -258,7 +280,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -269,8 +291,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/uexGaodeNavi";
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/EUExGaodeNavi/sourceCode/libs",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/EUExGaodeNavi/uexGaodeNavi-PrefixHeader.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				LD_GENERATE_MAP_FILE = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = uexGaodeNavi;
+				PROVISIONING_PROFILE = "756a3ff2-be53-4d08-862a-c050d0dfa3d9";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -279,9 +311,20 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/uexGaodeNavi";
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/EUExGaodeNavi/sourceCode/libs",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/EUExGaodeNavi/uexGaodeNavi-PrefixHeader.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				LD_GENERATE_MAP_FILE = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = uexGaodeNavi;
+				PROVISIONING_PROFILE = "756a3ff2-be53-4d08-862a-c050d0dfa3d9";
 				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
