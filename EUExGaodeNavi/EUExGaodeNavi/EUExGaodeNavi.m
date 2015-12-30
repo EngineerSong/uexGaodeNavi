@@ -239,7 +239,7 @@
 {
     NSMutableDictionary *dict=[NSMutableDictionary dictionary];
     [dict setValue:soundString forKey:@"text"];
-    
+    [dict setValue:@(soundStringType) forKey:@"type"];
     [self callbackJSONWithFunction:@"onGetNavigationText" object:dict];
 
 }
