@@ -85,7 +85,7 @@
     [MAMapServices sharedServices].apiKey=appKey;
     self.manager=[uexGaodeNaviManager defaultManager].naviManager;
     self.manager.delegate=self;
-    [self callbackJSONWithFunction:@"cbInit" object:nil];
+    [self callbackJSONWithFunction:@"cbInit" object:@{@"result":@(YES)}];
 }
 
 
