@@ -233,6 +233,7 @@
     
     [self.manager stopNavi];
     [self.manager dismissNaviViewControllerAnimated:YES];
+    [self callbackJSONWithFunction:@"onNaviCancel" object:nil];
 }
 
 - (void)naviManager:(AMapNaviManager *)naviManager playNaviSoundString:(NSString *)soundString soundStringType:(AMapNaviSoundType)soundStringType
