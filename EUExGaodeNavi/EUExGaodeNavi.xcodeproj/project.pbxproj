@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		42626E2C1D2208340062DF17 /* AppCanKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42626E2B1D2208340062DF17 /* AppCanKit.framework */; };
 		4282681E1C27E7AD00A10A68 /* EUExGaodeNavi.m in Sources */ = {isa = PBXBuildFile; fileRef = 4282681D1C27E7AD00A10A68 /* EUExGaodeNavi.m */; };
 		42D6539C1C3251BC000231E4 /* AMapNaviKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42D6539B1C3251BC000231E4 /* AMapNaviKit.framework */; };
 		42D6539F1C3251FB000231E4 /* AMap.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42D6539D1C3251EF000231E4 /* AMap.bundle */; };
@@ -31,9 +32,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		044B971CE46F4687409CAD65 /* SBJsonBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonBase.h; sourceTree = "<group>"; };
-		3133EB291FF6859FACF15179 /* EUExBase+Bundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EUExBase+Bundle.h"; sourceTree = "<group>"; };
 		424AD04D1C25285300EEC1F8 /* libuexGaodeNavi.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libuexGaodeNavi.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		42626E2B1D2208340062DF17 /* AppCanKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AppCanKit.framework; sourceTree = "<group>"; };
 		4282681C1C27E7AD00A10A68 /* EUExGaodeNavi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EUExGaodeNavi.h; sourceTree = "<group>"; };
 		4282681D1C27E7AD00A10A68 /* EUExGaodeNavi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EUExGaodeNavi.m; sourceTree = "<group>"; };
 		42D6539B1C3251BC000231E4 /* AMapNaviKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AMapNaviKit.framework; sourceTree = "<group>"; };
@@ -42,17 +42,6 @@
 		42D653A21C32586B000231E4 /* uexGaodeNaviManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uexGaodeNaviManager.h; sourceTree = "<group>"; };
 		42D653A31C32586B000231E4 /* uexGaodeNaviManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = uexGaodeNaviManager.m; sourceTree = "<group>"; };
 		42D653A51C3259A5000231E4 /* uexGaodeNavi-PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "uexGaodeNavi-PrefixHeader.pch"; sourceTree = "<group>"; };
-		46E41A61F4EC18ECD9B89677 /* MD5Digest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MD5Digest.h; sourceTree = "<group>"; };
-		4AC754A70466C22AB4736E0E /* EUExBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EUExBase.h; sourceTree = "<group>"; };
-		5A98C35758C27E9B9819385E /* EUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EUtility.h; sourceTree = "<group>"; };
-		5C47C6E382EC1151C029C76C /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonParser.h; sourceTree = "<group>"; };
-		62B680A003CBD024320DA2AB /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
-		99F30F5A88B35F0CF0F0AF07 /* JSONParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONParser.h; sourceTree = "<group>"; };
-		9B7ACEB0801511FE61EC57F5 /* SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJSON.h; sourceTree = "<group>"; };
-		9D3375DD1FFCDF081DDFC085 /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
-		BCEFBCFEA04F08C057D6FFA7 /* NSString+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SBJSON.h"; sourceTree = "<group>"; };
-		E0C60B4DBB83B2F68E9E8398 /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
-		F47480E25FB8818243AA495B /* EUExBaseDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EUExBaseDefine.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42626E2C1D2208340062DF17 /* AppCanKit.framework in Frameworks */,
 				42D6539C1C3251BC000231E4 /* AMapNaviKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -67,22 +57,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3D099EC039BD0B2720FBA208 /* JSON */ = {
-			isa = PBXGroup;
-			children = (
-				9D3375DD1FFCDF081DDFC085 /* JSON.h */,
-				99F30F5A88B35F0CF0F0AF07 /* JSONParser.h */,
-				46E41A61F4EC18ECD9B89677 /* MD5Digest.h */,
-				62B680A003CBD024320DA2AB /* NSObject+SBJSON.h */,
-				BCEFBCFEA04F08C057D6FFA7 /* NSString+SBJSON.h */,
-				9B7ACEB0801511FE61EC57F5 /* SBJSON.h */,
-				044B971CE46F4687409CAD65 /* SBJsonBase.h */,
-				5C47C6E382EC1151C029C76C /* SBJsonParser.h */,
-				E0C60B4DBB83B2F68E9E8398 /* SBJsonWriter.h */,
-			);
-			path = JSON;
-			sourceTree = "<group>";
-		};
 		424AD0441C25285300EEC1F8 = {
 			isa = PBXGroup;
 			children = (
@@ -113,28 +87,16 @@
 			isa = PBXGroup;
 			children = (
 				4282681F1C27FFEA00A10A68 /* libs */,
-				3D099EC039BD0B2720FBA208 /* JSON */,
 				42D653A21C32586B000231E4 /* uexGaodeNaviManager.h */,
 				42D653A31C32586B000231E4 /* uexGaodeNaviManager.m */,
 			);
 			path = sourceCode;
 			sourceTree = "<group>";
 		};
-		4CF8B510BBE2A47E8DA85A98 /* engineHeader */ = {
-			isa = PBXGroup;
-			children = (
-				5A98C35758C27E9B9819385E /* EUtility.h */,
-				3133EB291FF6859FACF15179 /* EUExBase+Bundle.h */,
-				4AC754A70466C22AB4736E0E /* EUExBase.h */,
-				F47480E25FB8818243AA495B /* EUExBaseDefine.h */,
-			);
-			path = engineHeader;
-			sourceTree = "<group>";
-		};
 		B574232C6B6990CF570E7675 /* EUExGaodeNavi */ = {
 			isa = PBXGroup;
 			children = (
-				4CF8B510BBE2A47E8DA85A98 /* engineHeader */,
+				42626E2B1D2208340062DF17 /* AppCanKit.framework */,
 				437259B8C8420ADD80BA2437 /* sourceCode */,
 				4282681C1C27E7AD00A10A68 /* EUExGaodeNavi.h */,
 				4282681D1C27E7AD00A10A68 /* EUExGaodeNavi.m */,
@@ -295,6 +257,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/EUExGaodeNavi/sourceCode/libs",
+					"$(PROJECT_DIR)/EUExGaodeNavi",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/EUExGaodeNavi/uexGaodeNavi-PrefixHeader.pch";
@@ -315,6 +278,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/EUExGaodeNavi/sourceCode/libs",
+					"$(PROJECT_DIR)/EUExGaodeNavi",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/EUExGaodeNavi/uexGaodeNavi-PrefixHeader.pch";

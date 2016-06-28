@@ -22,10 +22,8 @@
  */
 
 #import "EUExGaodeNavi.h"
-#import "EUtility.h"
-#import "JSON.h"
 #import "uexGaodeNaviManager.h"
-
+#import <AppCanKit/ACEXTScope.h>
 
 @interface EUExGaodeNavi()<AMapNaviManagerDelegate,AMapNaviViewControllerDelegate>
 
@@ -43,17 +41,21 @@
 
 #pragma mark - Life Cycle
 
-- (instancetype)initWithBrwView:(EBrowserView *)eInBrwView{
-    self=[super initWithBrwView:eInBrwView];
-    if(self){
+- (instancetype)initWithWebViewEngine:(id<AppCanWebViewEngineObject>)engine{
+    self = [super initWithWebViewEngine:engine];
+    if (self) {
         
     }
     return self;
 }
 
+
+
 - (void)clean{
-    _mapView=nil;
-    _naviController=nil;
+    _mapView = nil;
+
+    _naviController = nil;
+    self.manager.delegate = nil;
 }
 
 - (void)dealloc{
@@ -62,14 +64,14 @@
 
 - (MAMapView *)mapView{
     if(!_mapView){
-        _mapView=[[MAMapView alloc]init];
+        _mapView = [[MAMapView alloc]init];
     }
     return _mapView;
 }
 
 - (AMapNaviViewController *)naviController{
     if(!_naviController){
-        _naviController=[[AMapNaviViewController alloc]initWithMapView:self.mapView delegate:self];
+        _naviController = [[AMapNaviViewController alloc]initWithMapView:self.mapView delegate:self];
     }
     return _naviController;
 }
@@ -77,124 +79,116 @@
 #pragma mark - API
 
 - (void)init:(NSMutableArray *)inArguments{
-    NSString *appKey = [self appKeyFromInit:inArguments];
+    
+    
+    ACArgsUnpack(NSDictionary *info,ACJSFunctionRef *cb) = inArguments;
+    NSString *appKey = stringArg(info[@"appKey"]);
+
     if(!appKey || ![appKey isKindOfClass:[NSString class]] || appKey.length == 0){
         appKey=[[NSBundle mainBundle]infoDictionary][@"uexGaodeNaviAppKey"];
     }
-    [AMapNaviServices sharedServices].apiKey=appKey;
-    [MAMapServices sharedServices].apiKey=appKey;
-    self.manager=[uexGaodeNaviManager defaultManager].naviManager;
-    self.manager.delegate=self;
-    [self callbackJSONWithFunction:@"cbInit" object:@{@"result":@(YES)}];
+    [AMapNaviServices sharedServices].apiKey = appKey;
+    [MAMapServices sharedServices].apiKey = appKey;
+    
+    self.manager = [uexGaodeNaviManager defaultManager].naviManager;
+    self.manager.delegate = self;
+    
+    NSDictionary *result = @{@"result":@(YES)};
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.cbInit" arguments:ACArgsPack(result.ac_JSONFragment)];
+    [cb executeWithArguments:ACArgsPack(result)];
 }
 
 
 - (void)calculateWalkRoute:(NSMutableArray *)inArguments{
-    if([inArguments count] < 1){
-        [self cbCalculateRouteWithResult:NO];
-        return;
-    }
-    id info = [inArguments[0] JSONValue];
-    if(!info || ![info isKindOfClass:[NSDictionary class]]){
-        [self cbCalculateRouteWithResult:NO];
-        return;
-    }
-    
+    ACArgsUnpack(NSDictionary *info,ACJSFunctionRef *cb) = inArguments;
+    __block BOOL isSuccess = NO;
+    @onExit{
+        NSDictionary *result = @{@"result":@(isSuccess)};
+        [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.cbCalculateRoute" arguments:ACArgsPack(result.ac_JSONFragment)];
+        [cb executeWithArguments:ACArgsPack(result)];
+
+    };
     AMapNaviPoint *endPoint = [self pointFromArray:info[@"endPoint"]];
     if(!endPoint){
-        [self cbCalculateRouteWithResult:NO];
         return;
     }
     AMapNaviPoint *startPoint = [self pointFromArray:info[@"startPoint"]];
-    BOOL isSuccess;
     if(!startPoint){
         isSuccess = [self.manager calculateWalkRouteWithEndPoints:@[endPoint]];
     }else{
         isSuccess = [self.manager calculateWalkRouteWithStartPoints:@[startPoint] endPoints:@[endPoint]];
     }
-    [self cbCalculateRouteWithResult:isSuccess];
 }
 
 - (void)calculateDriveRoute:(NSMutableArray *)inArguments{
-    if([inArguments count] < 1){
-        return;
-    }
-    id info = [inArguments[0] JSONValue];
-    if(!info || ![info isKindOfClass:[NSDictionary class]]){
-        return;
-    }
+    ACArgsUnpack(NSDictionary *info,ACJSFunctionRef *cb) = inArguments;
+    __block BOOL isSuccess = NO;
+    @onExit{
+        NSDictionary *result = @{@"result":@(isSuccess)};
+        [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.cbCalculateRoute" arguments:ACArgsPack(result.ac_JSONFragment)];
+        [cb executeWithArguments:ACArgsPack(result)];
+        
+    };
     //endPoints
-    NSArray *endPoints=[info[@"endPoints"] isKindOfClass:[NSArray class]]?[self pointsFromArray:info[@"endPoints"]]:nil;
+    NSArray *endPoints = [self pointsFromArray:info[@"endPoints"]];
     if(!endPoints){
         AMapNaviPoint *endPoint = [self pointFromArray:info[@"endPoint"]];
         if(!endPoint){
-            [self cbCalculateRouteWithResult:NO];
             return;
         }
-        endPoints=@[endPoint];
+        endPoints = @[endPoint];
     }
     //startPoints
-    NSArray *startPoints=[info[@"startPoints"] isKindOfClass:[NSArray class]]?[self pointsFromArray:info[@"startPoints"]]:nil;
+    NSArray *startPoints = [self pointsFromArray:info[@"startPoints"]];
     if(!startPoints){
         AMapNaviPoint *startPoint = [self pointFromArray:info[@"startPoint"]];
         if(startPoint){
-            startPoints=@[startPoint];
+            startPoints = @[startPoint];
         }
         
     }
     //wayPoints
-    NSArray *wayPoints=[info[@"wayPoints"] isKindOfClass:[NSArray class]]?[self pointsFromArray:info[@"wayPoints"]]:nil;
+    NSArray *wayPoints = [self pointsFromArray:info[@"wayPoints"]];
     
     //driveMode
     NSInteger driveMode=[info[@"driveMode"] integerValue]?:0;
     AMapNaviDrivingStrategy strategy;
     switch (driveMode) {
         case 1:{
-            strategy=AMapNaviDrivingStrategySaveMoney;
+            strategy = AMapNaviDrivingStrategySaveMoney;
             break;
         }
         case 2:{
-            strategy=AMapNaviDrivingStrategyShortDistance;
+            strategy = AMapNaviDrivingStrategyShortDistance;
             break;
         }
         case 3:{
-            strategy=AMapNaviDrivingStrategyNoExpressways;
+            strategy = AMapNaviDrivingStrategyNoExpressways;
             break;
         }
         case 4:{
-            strategy=AMapNaviDrivingStrategyFastestTime;
+            strategy = AMapNaviDrivingStrategyFastestTime;
             break;
         }
         case 5:{
-            strategy=AMapNaviDrivingStrategyAvoidCongestion;
+            strategy = AMapNaviDrivingStrategyAvoidCongestion;
             break;
         }
         default:{
-            strategy=AMapNaviDrivingStrategyDefault;
+            strategy = AMapNaviDrivingStrategyDefault;
             break;
         }
     }
-    
-    
-    BOOL isSuccess;
     if(!startPoints){
         isSuccess = [self.manager calculateDriveRouteWithEndPoints:endPoints wayPoints:wayPoints drivingStrategy:strategy];
     }else{
         isSuccess = [self.manager calculateDriveRouteWithStartPoints:startPoints endPoints:endPoints wayPoints:wayPoints drivingStrategy:strategy];
     }
-    [self cbCalculateRouteWithResult:isSuccess];
-
 }
 
 - (void)startNavi:(NSMutableArray *)inArguments{
-    self.useGPSNavi=YES;
-    if(inArguments.count>0){
-        id info=[inArguments[0] JSONValue];
-        if (info && [info isKindOfClass:[NSDictionary class]] && info[@"type"]){
-            self.useGPSNavi=!([info[@"type"] integerValue] == 1);
-        }
-    }
-    //[EUtility brwView:self.meBrwView presentModalViewController:self.naviController animated:YES];
+    ACArgsUnpack(NSDictionary *info) = inArguments;
+    self.useGPSNavi = !([info[@"type"] integerValue] == 1);
     [self.manager presentNaviViewController:self.naviController animated:YES];
 }
 
@@ -218,7 +212,7 @@
     }else{
         [self.manager startEmulatorNavi];
     }
-    BOOL iOS9=[[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0;
+    BOOL iOS9= (ACSystemVersion() >= 9.0);
     NSArray *backgroundModes=[[NSBundle mainBundle]infoDictionary][@"UIBackgroundModes"];
     BOOL requireBackgroundLocationUpdate = backgroundModes && [backgroundModes isKindOfClass:[NSArray class]] && [backgroundModes containsObject:@"location"];
     if (iOS9 && requireBackgroundLocationUpdate) {
@@ -233,7 +227,7 @@
     
     [self.manager stopNavi];
     [self.manager dismissNaviViewControllerAnimated:YES];
-    [self callbackJSONWithFunction:@"onNaviCancel" object:nil];
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onNaviCancel" arguments:nil];
 }
 
 - (void)naviManager:(AMapNaviManager *)naviManager playNaviSoundString:(NSString *)soundString soundStringType:(AMapNaviSoundType)soundStringType
@@ -241,44 +235,27 @@
     NSMutableDictionary *dict=[NSMutableDictionary dictionary];
     [dict setValue:soundString forKey:@"text"];
     [dict setValue:@(soundStringType) forKey:@"type"];
-    [self callbackJSONWithFunction:@"onGetNavigationText" object:dict];
-
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onGetNavigationText" arguments:ACArgsPack(dict.ac_JSONFragment)];
 }
 
 - (void)naviManagerNeedRecalculateRouteForYaw:(AMapNaviManager *)naviManager{
-    [self callbackJSONWithFunction:@"onReCalculateRouteForYaw" object:nil];
+    
+    
+    
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onReCalculateRouteForYaw" arguments:nil];
 }
 
 - (void)naviManager:(AMapNaviManager *)naviManager didStartNavi:(AMapNaviMode)naviMode{
-    [self callbackJSONWithFunction:@"onStartNavi" object:nil];
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onStartNavi" arguments:nil];
 }
 - (void)naviManagerDidEndEmulatorNavi:(AMapNaviManager *)naviManager{
-    [self callbackJSONWithFunction:@"onArriveDestination" object:nil];
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onArriveDestination" arguments:nil];
 }
 
 - (void)naviManagerOnArrivedDestination:(AMapNaviManager *)naviManager{
-    [self callbackJSONWithFunction:@"onArriveDestination" object:nil];
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onArriveDestination" arguments:nil];
 }
 #pragma mark - Private
-
-
-
-
-- (void)cbCalculateRouteWithResult:(BOOL)isSuccess{
-    [self callbackJSONWithFunction:@"cbCalculateRoute" object:@{@"result":@(isSuccess)}];
-}
-
-
-- (NSString *)appKeyFromInit:(NSMutableArray *)inArguments{
-    if([inArguments count] < 1){
-        return nil;
-    }
-    id info = [inArguments[0] JSONValue];
-    if(!info || ![info isKindOfClass:[NSDictionary class]]){
-        return nil;
-    }
-    return info[@"appKey"];
-}
 
 
 
@@ -296,9 +273,9 @@
     if(!array || ![array isKindOfClass:[NSArray class]]){
         return nil;
     }
-    NSMutableArray *result=[NSMutableArray array];
+    NSMutableArray *result = [NSMutableArray array];
     for(NSArray *aPointArray in array){
-        AMapNaviPoint *point=[self pointFromArray:aPointArray];
+        AMapNaviPoint *point = [self pointFromArray:aPointArray];
         if(point){
             [result addObject:point];
         }
@@ -306,14 +283,5 @@
     return result;
 }
 
-#pragma mark - JSON Callback
-
-- (void)callbackJSONWithFunction:(NSString *)functionName object:(id)object{
-    [EUtility uexPlugin:@"uexGaodeNavi"
-         callbackByName:functionName
-             withObject:object
-                andType:uexPluginCallbackWithJsonString
-               inTarget:self.meBrwView];
-}
 
 @end
