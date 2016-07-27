@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <uexplugins>
-    <plugin
-        uexName="uexGaodeNavi" version="3.0.0" build="0">
-        <info>0:uexGaodeNavi for iOS</info>
-    </plugin>
+  <plugin uexName="uexGaodeNavi" version="3.0.1" build="1">
+    <info>1: IDE证书更新</info>
+    <build>0: uexGaodeNavi for iOS</build>
+  </plugin>
 </uexplugins>
