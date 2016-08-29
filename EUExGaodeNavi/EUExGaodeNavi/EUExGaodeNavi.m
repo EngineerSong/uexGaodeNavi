@@ -53,13 +53,13 @@
 
 - (void)clean{
     _mapView = nil;
-
     _naviController = nil;
     self.manager.delegate = nil;
 }
 
 - (void)dealloc{
     [self clean];
+    
 }
 
 - (MAMapView *)mapView{
@@ -91,7 +91,7 @@
     [MAMapServices sharedServices].apiKey = appKey;
     
     self.manager = [uexGaodeNaviManager defaultManager].naviManager;
-    self.manager.delegate = self;
+    
     
     NSDictionary *result = @{@"result":@(YES)};
     [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.cbInit" arguments:ACArgsPack(result.ac_JSONFragment)];
@@ -189,6 +189,7 @@
 - (void)startNavi:(NSMutableArray *)inArguments{
     ACArgsUnpack(NSDictionary *info) = inArguments;
     self.useGPSNavi = !([info[@"type"] integerValue] == 1);
+    self.manager.delegate = self;
     [self.manager presentNaviViewController:self.naviController animated:YES];
 }
 
@@ -199,7 +200,6 @@
     }
     [self.manager stopNavi];
     [self.manager dismissNaviViewControllerAnimated:YES];
-
 }
 
 #pragma mark - Delegate
