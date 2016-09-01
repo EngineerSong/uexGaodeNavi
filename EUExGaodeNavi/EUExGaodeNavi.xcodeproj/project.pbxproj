@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		42626E2C1D2208340062DF17 /* AppCanKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42626E2B1D2208340062DF17 /* AppCanKit.framework */; };
+		42247D511D7819CF0096DE3D /* AppCanKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42247D501D7819CF0096DE3D /* AppCanKit.framework */; };
 		4282681E1C27E7AD00A10A68 /* EUExGaodeNavi.m in Sources */ = {isa = PBXBuildFile; fileRef = 4282681D1C27E7AD00A10A68 /* EUExGaodeNavi.m */; };
 		42D6539C1C3251BC000231E4 /* AMapNaviKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42D6539B1C3251BC000231E4 /* AMapNaviKit.framework */; };
 		42D6539F1C3251FB000231E4 /* AMap.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42D6539D1C3251EF000231E4 /* AMap.bundle */; };
@@ -32,8 +32,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		42247D501D7819CF0096DE3D /* AppCanKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AppCanKit.framework; sourceTree = "<group>"; };
 		424AD04D1C25285300EEC1F8 /* libuexGaodeNavi.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libuexGaodeNavi.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		42626E2B1D2208340062DF17 /* AppCanKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AppCanKit.framework; sourceTree = "<group>"; };
 		4282681C1C27E7AD00A10A68 /* EUExGaodeNavi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EUExGaodeNavi.h; sourceTree = "<group>"; };
 		4282681D1C27E7AD00A10A68 /* EUExGaodeNavi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EUExGaodeNavi.m; sourceTree = "<group>"; };
 		42D6539B1C3251BC000231E4 /* AMapNaviKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AMapNaviKit.framework; sourceTree = "<group>"; };
@@ -49,7 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				42626E2C1D2208340062DF17 /* AppCanKit.framework in Frameworks */,
+				42247D511D7819CF0096DE3D /* AppCanKit.framework in Frameworks */,
 				42D6539C1C3251BC000231E4 /* AMapNaviKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -96,7 +96,7 @@
 		B574232C6B6990CF570E7675 /* EUExGaodeNavi */ = {
 			isa = PBXGroup;
 			children = (
-				42626E2B1D2208340062DF17 /* AppCanKit.framework */,
+				42247D501D7819CF0096DE3D /* AppCanKit.framework */,
 				437259B8C8420ADD80BA2437 /* sourceCode */,
 				4282681C1C27E7AD00A10A68 /* EUExGaodeNavi.h */,
 				4282681D1C27E7AD00A10A68 /* EUExGaodeNavi.m */,

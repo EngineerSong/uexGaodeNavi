@@ -94,7 +94,7 @@
     
     
     NSDictionary *result = @{@"result":@(YES)};
-    [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.cbInit" arguments:ACArgsPack(result.ac_JSONFragment)];
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.cbInit" arguments:ACArgsPack(kUexNoError)];
     [cb executeWithArguments:ACArgsPack(result)];
 }
 
@@ -105,7 +105,7 @@
     @onExit{
         NSDictionary *result = @{@"result":@(isSuccess)};
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.cbCalculateRoute" arguments:ACArgsPack(result.ac_JSONFragment)];
-        [cb executeWithArguments:ACArgsPack(result)];
+        [cb executeWithArguments:ACArgsPack(isSuccess ? kUexNoError : uexErrorMake(1,@"路径规划失败"))];
 
     };
     AMapNaviPoint *endPoint = [self pointFromArray:info[@"endPoint"]];
@@ -123,11 +123,11 @@
 - (void)calculateDriveRoute:(NSMutableArray *)inArguments{
     ACArgsUnpack(NSDictionary *info,ACJSFunctionRef *cb) = inArguments;
     __block BOOL isSuccess = NO;
+    
     @onExit{
         NSDictionary *result = @{@"result":@(isSuccess)};
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.cbCalculateRoute" arguments:ACArgsPack(result.ac_JSONFragment)];
-        [cb executeWithArguments:ACArgsPack(result)];
-        
+        [cb executeWithArguments:ACArgsPack(isSuccess ? kUexNoError : uexErrorMake(1,@"路径规划失败"))];
     };
     //endPoints
     NSArray *endPoints = [self pointsFromArray:info[@"endPoints"]];
