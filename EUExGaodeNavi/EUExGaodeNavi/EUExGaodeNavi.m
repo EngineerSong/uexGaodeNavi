@@ -94,8 +94,8 @@
     
     
     NSDictionary *result = @{@"result":@(YES)};
-    [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.cbInit" arguments:ACArgsPack(kUexNoError)];
-    [cb executeWithArguments:ACArgsPack(result)];
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.cbInit" arguments:ACArgsPack(result.ac_JSONFragment)];
+    [cb executeWithArguments:ACArgsPack(kUexNoError)];
 }
 
 
