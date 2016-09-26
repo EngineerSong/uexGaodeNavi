@@ -6,8 +6,6 @@
 	<dict>
 		<key>uexGaodeNaviAppKey</key>
 		<string>$uexGaodeNavi_appKey$</string>
-		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>NSLocationAlwaysUsageDescription</string>
 	</dict>
 </dict>
 </plist>
