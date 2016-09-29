@@ -28,9 +28,8 @@
 
 @interface uexGaodeNaviManager : NSObject
 
-@property (nonatomic,strong)AMapNaviManager *naviManager;
-
-
+@property (nonatomic,strong) AMapNaviDriveManager *driveManager;
+@property (nonatomic,strong) AMapNaviWalkManager *walkManager;
 + (instancetype)defaultManager;
 
 
