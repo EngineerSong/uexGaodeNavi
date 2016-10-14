@@ -45,7 +45,9 @@
 {
     self = [super init];
     if (self) {
-        _naviManager=[[AMapNaviManager alloc]init];
+        _driveManager = [[AMapNaviDriveManager alloc]init];
+        _walkManager  = [[AMapNaviWalkManager alloc]init];
+
     }
     return self;
 }

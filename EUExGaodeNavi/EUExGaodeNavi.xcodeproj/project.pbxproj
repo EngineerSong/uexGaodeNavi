@@ -7,12 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		213C93E11D9B695C002A028F /* MAMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 213C93E01D9B695C002A028F /* MAMapKit.framework */; };
+		213C93E71D9B69EF002A028F /* AMap.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 213C93E21D9B696E002A028F /* AMap.bundle */; };
+		213C93E81D9B69F4002A028F /* MAMapKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 213C93E01D9B695C002A028F /* MAMapKit.framework */; };
+		213C93E91D9B69FA002A028F /* AMapFoundationKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2180093D1D98F99100ABD11B /* AMapFoundationKit.framework */; };
+		213C93EA1D9B69FF002A028F /* AMapNaviKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2180093E1D98F99100ABD11B /* AMapNaviKit.framework */; };
+		213C93EB1D9B6A04002A028F /* AMapNavi.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 218009451D98F9A200ABD11B /* AMapNavi.bundle */; };
+		218009411D98F99100ABD11B /* AMapFoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2180093D1D98F99100ABD11B /* AMapFoundationKit.framework */; };
+		218009421D98F99100ABD11B /* AMapNaviKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2180093E1D98F99100ABD11B /* AMapNaviKit.framework */; };
 		42247D511D7819CF0096DE3D /* AppCanKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42247D501D7819CF0096DE3D /* AppCanKit.framework */; };
 		4282681E1C27E7AD00A10A68 /* EUExGaodeNavi.m in Sources */ = {isa = PBXBuildFile; fileRef = 4282681D1C27E7AD00A10A68 /* EUExGaodeNavi.m */; };
-		42D6539C1C3251BC000231E4 /* AMapNaviKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42D6539B1C3251BC000231E4 /* AMapNaviKit.framework */; };
-		42D6539F1C3251FB000231E4 /* AMap.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42D6539D1C3251EF000231E4 /* AMap.bundle */; };
-		42D653A01C3251FB000231E4 /* AMapNavi.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42D6539E1C3251EF000231E4 /* AMapNavi.bundle */; };
-		42D653A11C3251FB000231E4 /* AMapNaviKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42D6539B1C3251BC000231E4 /* AMapNaviKit.framework */; };
 		42D653A41C32586B000231E4 /* uexGaodeNaviManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D653A31C32586B000231E4 /* uexGaodeNaviManager.m */; };
 /* End PBXBuildFile section */
 
@@ -23,22 +27,26 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
-				42D6539F1C3251FB000231E4 /* AMap.bundle in CopyFiles */,
-				42D653A01C3251FB000231E4 /* AMapNavi.bundle in CopyFiles */,
-				42D653A11C3251FB000231E4 /* AMapNaviKit.framework in CopyFiles */,
+				213C93EB1D9B6A04002A028F /* AMapNavi.bundle in CopyFiles */,
+				213C93EA1D9B69FF002A028F /* AMapNaviKit.framework in CopyFiles */,
+				213C93E91D9B69FA002A028F /* AMapFoundationKit.framework in CopyFiles */,
+				213C93E81D9B69F4002A028F /* MAMapKit.framework in CopyFiles */,
+				213C93E71D9B69EF002A028F /* AMap.bundle in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		213C93E01D9B695C002A028F /* MAMapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MAMapKit.framework; sourceTree = "<group>"; };
+		213C93E21D9B696E002A028F /* AMap.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = AMap.bundle; path = MAMapKit.framework/AMap.bundle; sourceTree = "<group>"; };
+		2180093D1D98F99100ABD11B /* AMapFoundationKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AMapFoundationKit.framework; sourceTree = "<group>"; };
+		2180093E1D98F99100ABD11B /* AMapNaviKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AMapNaviKit.framework; sourceTree = "<group>"; };
+		218009451D98F9A200ABD11B /* AMapNavi.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = AMapNavi.bundle; path = AMapNaviKit.framework/AMapNavi.bundle; sourceTree = "<group>"; };
 		42247D501D7819CF0096DE3D /* AppCanKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AppCanKit.framework; sourceTree = "<group>"; };
 		424AD04D1C25285300EEC1F8 /* libuexGaodeNavi.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libuexGaodeNavi.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4282681C1C27E7AD00A10A68 /* EUExGaodeNavi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EUExGaodeNavi.h; sourceTree = "<group>"; };
 		4282681D1C27E7AD00A10A68 /* EUExGaodeNavi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EUExGaodeNavi.m; sourceTree = "<group>"; };
-		42D6539B1C3251BC000231E4 /* AMapNaviKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AMapNaviKit.framework; sourceTree = "<group>"; };
-		42D6539D1C3251EF000231E4 /* AMap.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = AMap.bundle; path = AMapNaviKit.framework/Resources/AMap.bundle; sourceTree = "<group>"; };
-		42D6539E1C3251EF000231E4 /* AMapNavi.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = AMapNavi.bundle; path = AMapNaviKit.framework/Resources/AMapNavi.bundle; sourceTree = "<group>"; };
 		42D653A21C32586B000231E4 /* uexGaodeNaviManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uexGaodeNaviManager.h; sourceTree = "<group>"; };
 		42D653A31C32586B000231E4 /* uexGaodeNaviManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = uexGaodeNaviManager.m; sourceTree = "<group>"; };
 		42D653A51C3259A5000231E4 /* uexGaodeNavi-PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "uexGaodeNavi-PrefixHeader.pch"; sourceTree = "<group>"; };
@@ -50,7 +58,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				42247D511D7819CF0096DE3D /* AppCanKit.framework in Frameworks */,
-				42D6539C1C3251BC000231E4 /* AMapNaviKit.framework in Frameworks */,
+				218009411D98F99100ABD11B /* AMapFoundationKit.framework in Frameworks */,
+				213C93E11D9B695C002A028F /* MAMapKit.framework in Frameworks */,
+				218009421D98F99100ABD11B /* AMapNaviKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,9 +86,11 @@
 		4282681F1C27FFEA00A10A68 /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				42D6539D1C3251EF000231E4 /* AMap.bundle */,
-				42D6539E1C3251EF000231E4 /* AMapNavi.bundle */,
-				42D6539B1C3251BC000231E4 /* AMapNaviKit.framework */,
+				213C93E21D9B696E002A028F /* AMap.bundle */,
+				213C93E01D9B695C002A028F /* MAMapKit.framework */,
+				218009451D98F9A200ABD11B /* AMapNavi.bundle */,
+				2180093D1D98F99100ABD11B /* AMapFoundationKit.framework */,
+				2180093E1D98F99100ABD11B /* AMapNaviKit.framework */,
 			);
 			path = libs;
 			sourceTree = "<group>";
