@@ -22,17 +22,18 @@
  */
 
 #import "EUExGaodeNavi.h"
-#import "uexGaodeNaviManager.h"
 #import <AppCanKit/ACEXTScope.h>
 #import <AMapFoundationKit/AMapFoundationKit.h>
+#import <AMapNaviKit/AMapNaviKit.h>
 @interface EUExGaodeNavi()<AMapNaviDriveManagerDelegate, AMapNaviDriveViewDelegate,AMapNaviWalkManagerDelegate,AMapNaviWalkViewDelegate,MAMapViewDelegate>
 
-@property (nonatomic,weak) AMapNaviDriveManager *driveManager;
-@property (nonatomic, weak) AMapNaviWalkManager *walkManager;
-@property (nonatomic, strong) AMapNaviDriveView *driveView;
-@property (nonatomic, strong) AMapNaviWalkView *walkView;
-@property (nonatomic,assign)BOOL useGPSNavi;
-@property (nonatomic,assign)BOOL isWalk;
+@property (nonatomic,strong) AMapNaviDriveManager *driveManager;
+@property (nonatomic,strong) AMapNaviWalkManager *walkManager;
+@property (nonatomic,strong) AMapNaviDriveView *driveView;
+@property (nonatomic,strong) AMapNaviWalkView *walkView;
+@property (nonatomic,assign) BOOL isWalk;
+@property (nonatomic,strong) ACJSFunctionRef *walkCallback;
+@property (nonatomic,strong) ACJSFunctionRef *driveCallback;
 @end
 
 
@@ -51,34 +52,76 @@
     return self;
 }
 
+- (void)clean{
+    [self cleanWalkManager];
+    [self cleanDriveManager];
+}
 
+- (BOOL)requireBackgroundLocationUpdate{
+    static BOOL requireBackgroundLocationUpdate;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSArray *backgroundModes=[[NSBundle mainBundle] infoDictionary][@"UIBackgroundModes"];
+        requireBackgroundLocationUpdate = backgroundModes && [backgroundModes isKindOfClass:[NSArray class]] && [backgroundModes containsObject:@"location"];
+    });
+    return requireBackgroundLocationUpdate;
+}
+
+- (AMapNaviDriveManager *)driveManager{
+    if(!_driveManager){
+        _driveManager = [[AMapNaviDriveManager alloc] init];
+        _driveManager.delegate = self;
+
+        if ((ACSystemVersion() >= 9.0) && self.requireBackgroundLocationUpdate) {
+            _driveManager.allowsBackgroundLocationUpdates = YES;
+        }
+    }
+    return _driveManager;
+}
+
+- (AMapNaviWalkManager *)walkManager{
+    if(!_walkManager){
+        _walkManager = [[AMapNaviWalkManager alloc] init];
+        _walkManager.delegate = self;
+        if ((ACSystemVersion() >= 9.0) && self.requireBackgroundLocationUpdate) {
+            _walkManager.allowsBackgroundLocationUpdates = YES;
+        }
+    }
+    return _walkManager;
+}
 
 - (void)cleanDriveManager{
-    self.driveManager.delegate = nil;
+    [self.driveManager stopNavi];
+    [self.driveManager removeDataRepresentative:self.driveView];
+    [self.driveView removeFromSuperview];
     self.driveView.delegate = nil;
-    self.driveView = nil;
+    _driveView = nil;
     
 }
 - (void)cleanWalkManager{
-    self.walkManager.delegate = nil;
+    [self.walkManager stopNavi];
+    [self.walkManager removeDataRepresentative:self.walkView];
+    [self.walkView removeFromSuperview];
     self.walkView.delegate = nil;
-    self.walkView = nil;
+    _walkView = nil;
 }
 
 
--(AMapNaviDriveView *)driveView{
+- (AMapNaviDriveView *)driveView{
     if (!_driveView){
         _driveView = [[AMapNaviDriveView alloc] initWithFrame:[UIScreen mainScreen].bounds];
         _driveView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         _driveView.delegate = self;
+        _driveView.showMoreButton = NO;
     }
     return _driveView;
 }
--(AMapNaviWalkView *)walkView{
+- (AMapNaviWalkView *)walkView{
     if (!_walkView){
         _walkView = [[AMapNaviWalkView alloc] initWithFrame:[UIScreen mainScreen].bounds];
         _walkView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         _walkView.delegate = self;
+        _driveView.showMoreButton = NO;
     }
     return _walkView;
 }
@@ -96,18 +139,17 @@
     if(!appKey || ![appKey isKindOfClass:[NSString class]] || appKey.length == 0){
         appKey=[[NSBundle mainBundle]infoDictionary][@"uexGaodeNaviAppKey"];
     }
+    [AMapServices sharedServices].enableHTTPS = YES;
     [AMapServices sharedServices].apiKey = appKey;
     NSDictionary *result = @{@"result":@(YES)};
     [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.cbInit" arguments:ACArgsPack(result.ac_JSONFragment)];
     [cb executeWithArguments:ACArgsPack(kUexNoError)];
 }
-- (void)statusBarOrientationChange:(NSNotification *)notification
-{
+- (void)statusBarOrientationChange:(NSNotification *)notification{
     
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
 
-    if (UIInterfaceOrientationIsPortrait(orientation))
-    {
+    if (UIInterfaceOrientationIsPortrait(orientation)){
         if (_isWalk) {
             [self.walkView setIsLandscape:NO];
         } else {
@@ -115,9 +157,7 @@
         }
         
        
-    }
-    else if (UIInterfaceOrientationIsLandscape(orientation))
-    {
+    }else if (UIInterfaceOrientationIsLandscape(orientation)){
         if (_isWalk) {
              [self.walkView setIsLandscape:YES];
         } else {
@@ -129,41 +169,27 @@
 }
 
 - (void)calculateWalkRoute:(NSMutableArray *)inArguments{
-    ACArgsUnpack(NSDictionary *info,ACJSFunctionRef *cb) = inArguments;
-    self.walkManager = [uexGaodeNaviManager defaultManager].walkManager;
-    self.walkManager.delegate = self;
+    ACArgsUnpack(NSDictionary *info,ACJSFunctionRef *callback) = inArguments;
     _isWalk = YES;
-    __block BOOL isSuccess = NO;
-    @onExit{
-        NSDictionary *result = @{@"result":@(isSuccess)};
-        [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.cbCalculateRoute" arguments:ACArgsPack(result.ac_JSONFragment)];
-        [cb executeWithArguments:ACArgsPack(isSuccess ? kUexNoError : uexErrorMake(1,@"路径规划失败"))];
 
-    };
     AMapNaviPoint *endPoint = [self pointFromArray:info[@"endPoint"]];
     if(!endPoint){
         return;
     }
+    self.walkCallback = callback;
     AMapNaviPoint *startPoint = [self pointFromArray:info[@"startPoint"]];
     if(!startPoint){
-        isSuccess = [self.walkManager calculateWalkRouteWithEndPoints:@[endPoint]];
+        [self.walkManager calculateWalkRouteWithEndPoints:@[endPoint]];
     }else{
-        isSuccess = [self.walkManager calculateWalkRouteWithStartPoints:@[startPoint] endPoints:@[endPoint]];
+        [self.walkManager calculateWalkRouteWithStartPoints:@[startPoint] endPoints:@[endPoint]];
     }
     
 }
 
 - (void)calculateDriveRoute:(NSMutableArray *)inArguments{
     _isWalk = NO;
-    ACArgsUnpack(NSDictionary *info,ACJSFunctionRef *cb) = inArguments;
-    self.driveManager = [uexGaodeNaviManager defaultManager].driveManager;
-    self.driveManager.delegate = self;
-    __block BOOL isSuccess = NO;
-    @onExit{
-        NSDictionary *result = @{@"result":@(isSuccess)};
-        [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.cbCalculateRoute" arguments:ACArgsPack(result.ac_JSONFragment)];
-        [cb executeWithArguments:ACArgsPack(isSuccess ? kUexNoError : uexErrorMake(1,@"路径规划失败"))];
-    };
+    ACArgsUnpack(NSDictionary *info,ACJSFunctionRef *callback) = inArguments;
+
     //endPoints
     NSArray *endPoints = [self pointsFromArray:info[@"endPoints"]];
     if(!endPoints){
@@ -180,7 +206,6 @@
         if(startPoint){
             startPoints = @[startPoint];
         }
-        
     }
     //wayPoints
     NSArray *wayPoints = [self pointsFromArray:info[@"wayPoints"]];
@@ -214,26 +239,30 @@
             break;
         }
     }
-   
+    self.driveCallback = callback;
     if(!startPoints){
-        isSuccess = [self.driveManager calculateDriveRouteWithEndPoints:endPoints wayPoints:wayPoints drivingStrategy:strategy];
+        [self.driveManager calculateDriveRouteWithEndPoints:endPoints wayPoints:wayPoints drivingStrategy:strategy];
     }else{
-        isSuccess = [self.driveManager calculateDriveRouteWithStartPoints:startPoints endPoints:endPoints wayPoints:wayPoints drivingStrategy:strategy];
+        [self.driveManager calculateDriveRouteWithStartPoints:startPoints endPoints:endPoints wayPoints:wayPoints drivingStrategy:strategy];
     }
     
 }
 
 - (void)startNavi:(NSMutableArray *)inArguments{
     ACArgsUnpack(NSDictionary *info) = inArguments;
-    self.useGPSNavi = !([info[@"type"] integerValue] == 1);
+    BOOL useEmulatorNavi = numberArg(info[@"type"]).integerValue == 1;
+    
     if (_isWalk) {
         [self.walkManager addDataRepresentative:self.walkView];
         [[self.webViewEngine webView] addSubview:self.walkView];
+        useEmulatorNavi ? [self.walkManager startEmulatorNavi] : [self.walkManager startGPSNavi];
     } else {
         [self.driveManager addDataRepresentative:self.driveView];
         [[self.webViewEngine webView] addSubview:self.driveView];
-
+        useEmulatorNavi ? [self.driveManager startEmulatorNavi] : [self.driveManager startGPSNavi];
     }
+    
+
     
     
 }
@@ -241,47 +270,35 @@
 
 - (void)stopNavi:(NSMutableArray *)inArguments{
     if(_isWalk){
-        [self.walkManager stopNavi];
-        [self.walkManager removeDataRepresentative:self.walkView];
-        [self.walkView removeFromSuperview];
         [self cleanWalkManager];
-        
     }else{
-        [self.driveManager stopNavi];
-        [self.driveManager removeDataRepresentative:self.driveView];
-        [self.driveView removeFromSuperview];
         [self cleanDriveManager];
     }
-
-
-    
-    
 }
 
 #pragma mark - AMapNaviDriveManagerDelegate
 
-- (void)driveManagerOnCalculateRouteSuccess:(AMapNaviDriveManager *)driveManager
-{
-    NSLog(@"onCalculateRouteSuccess");
-    
-    //算路成功后开始GPS导航
-    if(self.useGPSNavi){
-        [self.driveManager startGPSNavi];
-    }else{
-        [self.driveManager startEmulatorNavi];
-    }
-    BOOL iOS9= (ACSystemVersion() >= 9.0);
-    NSArray *backgroundModes=[[NSBundle mainBundle]infoDictionary][@"UIBackgroundModes"];
-    BOOL requireBackgroundLocationUpdate = backgroundModes && [backgroundModes isKindOfClass:[NSArray class]] && [backgroundModes containsObject:@"location"];
-    if (iOS9 && requireBackgroundLocationUpdate) {
-        self.driveManager.allowsBackgroundLocationUpdates = YES;
-    }
 
+- (void)driveManager:(AMapNaviDriveManager *)driveManager error:(NSError *)error{
+    NSDictionary *result = @{@"result":@(NO)};
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.cbCalculateRoute" arguments:ACArgsPack(result.ac_JSONFragment)];
+    [self.driveCallback executeWithArguments:ACArgsPack(uexErrorMake(error.code,error.localizedDescription))];
+    self.driveCallback = nil;
 }
 
-- (void)driveManager:(AMapNaviDriveManager *)driveManager playNaviSoundString:(NSString *)soundString soundStringType:(AMapNaviSoundType)soundStringType
-{
-    NSLog(@"playNaviSoundString:{%ld:%@}", (long)soundStringType, soundString);
+- (void)driveManagerOnCalculateRouteSuccess:(AMapNaviDriveManager *)driveManager{
+    NSDictionary *result = @{@"result":@(YES)};
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.cbCalculateRoute" arguments:ACArgsPack(result.ac_JSONFragment)];
+    [self.driveCallback executeWithArguments:ACArgsPack(kUexNoError)];
+    self.driveCallback = nil;
+}
+
+- (void)driveManager:(AMapNaviDriveManager *)driveManager onCalculateRouteFailure:(NSError *)error{
+    
+}
+
+- (void)driveManager:(AMapNaviDriveManager *)driveManager playNaviSoundString:(NSString *)soundString soundStringType:(AMapNaviSoundType)soundStringType{
+    
     
     NSMutableDictionary *dict=[NSMutableDictionary dictionary];
     [dict setValue:soundString forKey:@"text"];
@@ -289,113 +306,102 @@
     [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onGetNavigationText" arguments:ACArgsPack(dict.ac_JSONFragment)];
 }
 
-- (void)driveManagerNeedRecalculateRouteForYaw:(AMapNaviDriveManager *)driveManager
-{
-    NSLog(@"needRecalculateRouteForYaw");
+- (void)driveManagerNeedRecalculateRouteForYaw:(AMapNaviDriveManager *)driveManager{
+
     [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onReCalculateRouteForYaw" arguments:nil];
 }
 
-- (void)driveManager:(AMapNaviDriveManager *)driveManager didStartNavi:(AMapNaviMode)naviMode
-{
-    NSLog(@"didStartNavi");
+- (void)driveManager:(AMapNaviDriveManager *)driveManager didStartNavi:(AMapNaviMode)naviMode{
+
     [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onStartNavi" arguments:nil];
 }
 
-- (void)driveManagerDidEndEmulatorNavi:(AMapNaviDriveManager *)driveManager
-{
-    NSLog(@"didEndEmulatorNavi");
+- (void)driveManagerDidEndEmulatorNavi:(AMapNaviDriveManager *)driveManager{
+    //模拟导航时不会触发`driveManagerOnArrivedDestination:` 应该是bug
+    //因此在此方法中进行回调
+    [self cleanDriveManager];
     [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onArriveDestination" arguments:nil];
 }
 
 
-- (void)driveManagerOnArrivedDestination:(AMapNaviDriveManager *)driveManager
-{
-    NSLog(@"onArrivedDestination");
+- (void)driveManagerOnArrivedDestination:(AMapNaviDriveManager *)driveManager{
+    
+    [self cleanDriveManager];
     [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onArriveDestination" arguments:nil];
 }
 #pragma mark - AMapNaviDriveViewDelegate
-- (void)driveViewCloseButtonClicked:(AMapNaviDriveView *)driveView
-{
+- (void)driveViewCloseButtonClicked:(AMapNaviDriveView *)driveView{
     //停止导航
-    [self.driveManager stopNavi];
-    [self.driveManager removeDataRepresentative:self.driveView];
-    [self.driveView removeFromSuperview];
     [self cleanDriveManager];
     [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onNaviCancel" arguments:nil];
 }
+
+
+
+
+
 - (void)driveViewMoreButtonClicked:(AMapNaviDriveView *)driveView{
 }
 
 
 #pragma mark - AMapNaviWalkManagerDelegate
 
-- (void)walkManager:(AMapNaviWalkManager *)walkManager error:(NSError *)error
-{
-    NSLog(@"error:{%ld - %@}", (long)error.code, error.localizedDescription);
+- (void)walkManager:(AMapNaviWalkManager *)walkManager error:(NSError *)error{
+    NSDictionary *result = @{@"result":@(NO)};
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.cbCalculateRoute" arguments:ACArgsPack(result.ac_JSONFragment)];
+    [self.walkCallback executeWithArguments:ACArgsPack(uexErrorMake(error.code,error.localizedDescription))];
+    self.walkCallback = nil;
 }
 
-- (void)walkManagerOnCalculateRouteSuccess:(AMapNaviWalkManager *)walkManager
-{
-    NSLog(@"onCalculateRouteSuccess");
-    //算路成功后开始导航
-    if(self.useGPSNavi){
-        [self.self.walkManager startGPSNavi];
-    }else{
-        [self.self.walkManager startEmulatorNavi];
-    }
-    BOOL iOS9= (ACSystemVersion() >= 9.0);
-    NSArray *backgroundModes=[[NSBundle mainBundle]infoDictionary][@"UIBackgroundModes"];
-    BOOL requireBackgroundLocationUpdate = backgroundModes && [backgroundModes isKindOfClass:[NSArray class]] && [backgroundModes containsObject:@"location"];
-    if (iOS9 && requireBackgroundLocationUpdate) {
-        self.walkManager.allowsBackgroundLocationUpdates = YES;
-    }
-   
+- (void)walkManagerOnCalculateRouteSuccess:(AMapNaviWalkManager *)walkManager{
+    NSDictionary *result = @{@"result":@(YES)};
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.cbCalculateRoute" arguments:ACArgsPack(result.ac_JSONFragment)];
+    [self.walkCallback executeWithArguments:ACArgsPack(kUexNoError)];
+    self.walkCallback = nil;
+
     
 }
 
-- (void)walkManager:(AMapNaviWalkManager *)walkManager onCalculateRouteFailure:(NSError *)error
-{
-    NSLog(@"onCalculateRouteFailure:{%ld - %@}", (long)error.code, error.localizedDescription);
+- (void)walkManager:(AMapNaviWalkManager *)walkManager onCalculateRouteFailure:(NSError *)error{
+
 }
 
-- (void)walkManager:(AMapNaviWalkManager *)walkManager didStartNavi:(AMapNaviMode)naviMode
-{
-    NSLog(@"didStartNavi");
+- (void)walkManager:(AMapNaviWalkManager *)walkManager didStartNavi:(AMapNaviMode)naviMode{
     [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onStartNavi" arguments:nil];
 }
 
-- (void)walkManagerNeedRecalculateRouteForYaw:(AMapNaviWalkManager *)walkManager
-{
-    NSLog(@"needRecalculateRouteForYaw");
+- (void)walkManagerNeedRecalculateRouteForYaw:(AMapNaviWalkManager *)walkManager{
+
     [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onReCalculateRouteForYaw" arguments:nil];
 }
 
-- (void)walkManager:(AMapNaviWalkManager *)walkManager playNaviSoundString:(NSString *)soundString soundStringType:(AMapNaviSoundType)soundStringType
-{
-    NSLog(@"playNaviSoundString:{%ld:%@}", (long)soundStringType, soundString);
+- (void)walkManager:(AMapNaviWalkManager *)walkManager playNaviSoundString:(NSString *)soundString soundStringType:(AMapNaviSoundType)soundStringType{
+
     NSMutableDictionary *dict=[NSMutableDictionary dictionary];
     [dict setValue:soundString forKey:@"text"];
     [dict setValue:@(soundStringType) forKey:@"type"];
     [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onGetNavigationText" arguments:ACArgsPack(dict.ac_JSONFragment)];
 }
 
-- (void)walkManagerDidEndEmulatorNavi:(AMapNaviWalkManager *)walkManager
-{
-    NSLog(@"didEndEmulatorNavi");
-     [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onArriveDestination" arguments:nil];
+
+
+
+- (void)walkManagerDidEndEmulatorNavi:(AMapNaviWalkManager *)walkManager{
+//    [self cleanWalkManager];
+//    [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onArriveDestination" arguments:nil];
 }
 
-- (void)walkManagerOnArrivedDestination:(AMapNaviWalkManager *)walkManager
-{
-    NSLog(@"onArrivedDestination");
-     [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onArriveDestination" arguments:nil];
+- (void)walkManagerOnArrivedDestination:(AMapNaviWalkManager *)walkManager{
+
+    [self cleanWalkManager];
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onArriveDestination" arguments:nil];
 }
+
+
 #pragma mark - AMapNaviWalkViewDelegate
 - (void)walkViewCloseButtonClicked:(AMapNaviWalkView *)walkView{
     //停止导航
-    [self.walkManager stopNavi];
-    [self.walkManager removeDataRepresentative:self.walkView];
-    [self.walkView removeFromSuperview];
+
     [self cleanWalkManager];
     [self.webViewEngine callbackWithFunctionKeyPath:@"uexGaodeNavi.onNaviCancel" arguments:nil];
 }
@@ -434,6 +440,9 @@
     }
     return result;
 }
+
+
+
 
 
 @end

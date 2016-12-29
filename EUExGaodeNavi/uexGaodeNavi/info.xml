@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <uexplugins>
     <plugin
-        uexName="uexGaodeNavi" version="4.0.0" build="0">
-        <info>0:uexGaodeNavi for iOS</info>
+        uexName="uexGaodeNavi" version="4.0.1" build="1">
+        <info>1:SDK 升级,支持ATS</info>
+        <build>0:uexGaodeNavi for iOS</build>
     </plugin>
 </uexplugins>
 
